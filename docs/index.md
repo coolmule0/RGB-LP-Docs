@@ -5,6 +5,10 @@ A high-performance, graphical processing unit-based algorithm for efficiently so
 
 2-D linear problems are sets of equations of the form $ax + by < c$ with a function to maximise/minimise of the form $ix + jy$.
 
+
+<img src="2000px-Linear_Programming_Feasible_Region.svg.png" alt="Example of 2D linear program" width="500"/>
+
+
 ## Requirements
 * x64 CPU architecture
 * Nvidia GPU with compute capability > 30 (most GPUs from 2013 onwards)
