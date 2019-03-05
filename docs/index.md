@@ -5,8 +5,7 @@ A high-performance, graphical processing unit-based algorithm for efficiently so
 
 2-D linear problems are sets of equations of the form $ax + by < c$ with a function to maximise/minimise of the form $ix + jy$.
 
-
-<img src="2000px-Linear_Programming_Feasible_Region.svg.png" alt="Example of 2D linear program" width="500"/>
+![alt text](Small-Linear_Programming_Feasible_Region.png "Example of 2D linear program")
 
 
 ## Requirements
