@@ -1,15 +1,63 @@
-## Building The Code
+## Obtaining The Code
 
-Code must be built before it can be ran. Obtain the code from [Github](https://github.com/coolmule0/LP). This uses [CMAKE](https://cmake.org/download/) to generate the build files. 
+Obtain the code from [Github](https://github.com/coolmule0/LP). This uses [CMAKE](https://cmake.org/download/) to generate the build files. 
 
-### CMAKE
+## How to build
 
-* Set CMake to build from the root directory of the downloaded folder. 
-* Add the correct architecture for your GPU using -arch=sm_xx under `CMAKE_CUDA_FLAGS`, replacing xx with the relevant version
+If using Visual studio, there is a ready-to-use solution file avaialable called `LP.sln`. Otherwise ensure there is a working version of CMAKE available.
+
+### CMake
+
+Use CMake to generate the relevant makefile, VS solution, e.t.c. Useful CMake flags to set would be adding `-arch=sm_xx` to "CMAKE_CUDA_FLAGS". This ensures that the project is built using a suitable architecture. Requires `xx` to be set to at least 30. Therefor ensure the GPU this is ran on is an NVidia graphics card with compute capability of at least 30.
 
     e.g. for a GTX 970, which uses compute 3.5, use -arch=sm_35
     
     Check out [this list](https://en.wikipedia.org/wiki/CUDA#GPUs_supported) for help discovering your compute version
-* This should generate the relevant solution/makefile
 
-## Running The Program
+
+### Windows
+
+Directory contains a visual studio solution not requiring CMake. Open this .sln file in visual studio.
+
+## What this project contains
+
+CMake capabilities to generate a build tool such as make or .sln. The GLM library in `include/glm`
+
+## How to Run
+
+Build and compile the project to generate an executable. The default location will be `x64/"build_mode"/LP` where "build_mode" is either "Debug" or "Release".
+
+Executable takes 2 arguments: 1) The name of constraint data to read in. 2) The number of batches of these to solve.
+
+An example would be `./x64/Release/LP benchmarks/64 1024` to use the pregenerated file containing 64 random constraints with feasible solution, for 1024 batches.
+
+## Program Output
+
+The program will output timing to the "timings" folder in a timings.txt file. This file contains lines of the form `%1 %2 %3\n` where %1 is the number of constraints (e.g. 64), %2 is the number of batches (e.g. 1024), %3 is the time in milliseconds that the program took.
+
+The solutions to the linear program are printed to console. Access to these values is accessible within the code by both GPU and CPU code in `output[i]` where i ranges over all batches.
+
+## Runing a test example
+
+Once an executable has been generated one can check the program is working correctly. This example uses a release mode build and can be done from the command line by running the following command from the base folder directory for this code:
+
+`"./x64/Release/LP.exe" benchmarks/64 1024`
+
+Or for Linux:
+
+`./x64/Release/LP benchmarks/64 1024`
+
+which should provide the output:
+
+`Batch 0          Optimal location is x: 1.265306 y: 0.448980     value of 2.163265`
+
+
+## Custom Data
+
+To use custom data, create 3 files of the form *_A.txt, *_B.txt, *_C.txt. Where * is a consistent name for all 3 files. File *_A.txt starts with a line of 2 numbers, the first is the number of constraints within the file (n) and the dimension of the problem (d) (should always be 2). The remainder of the file is (n) lines of (d) numbers. These represent the left hand side of the constraints A1x + A2y <= B. All should be space-separated when on the same line
+
+File *_B.txt contains (n) lines of 1 number. These represent the right hand side of the constraints A1x + A2y <= B. 
+
+File *_C.txt contains (d) lines of 1 number (d=2). These represent the objective function to maximise. Ensure data is written with respects to maximising objective function, and inequalities are of form Ax <= B.
+
+For solving a minimization (e.g. min ax + by ) there is a corresponding maximization function (max -ax - by) that can always be used.
